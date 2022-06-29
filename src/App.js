@@ -7,15 +7,11 @@ function App() {
   const [location,setLocation] = useState('')
   const [err,setErr] = useState('')
 
-  // window.addEventListener('enter',back)
   function back(){
   const backimg = document.querySelector("#app");
-  // console.log(backimg);
-
   const desc = document.querySelector("#desc");
-  // console.log(desc);
-
-  }back()
+  }
+  back()
 
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=f7faf169c296333a5e46c865f7987a27`
   
@@ -24,16 +20,16 @@ function App() {
    try{
     const res=await axios.get(url)
       setData(res.data)
-      console.log(res.data)
+      setErr("No Error")
+
     }
     catch(err){
     setErr("Not Available")
+    setData(null);
     console.log(err)
-    // .then((err)=>{console.log(err)})
   }
   }
   
-  console.log(data.weather && data.weather[0])
   
   
   }
@@ -47,7 +43,7 @@ function App() {
          onKeyPress={searchLocation}
          placeholder="Enter Location" />
       </div>
-      {data.name ? (
+      {data ? (
       <div className='container'>
         <div className='top'>
           <div className='location'>
