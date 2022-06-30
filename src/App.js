@@ -3,13 +3,13 @@ import axios from 'axios';
 import clearsky from "./assets/clearsky.jpg"
 import cloudy from './assets/cloudy.jpg'
 import rain from './assets/rainy.jpg'
+import sun from './assets/sun.jpg'
 
 
 function App() {
   const [data,setData] = useState({})
   const [location,setLocation] = useState('')
-  const [err,setErr] = useState('')
-  console.log(data)
+  const [error,setError] = useState('')
 
   function clear(){
     const climate=data.weather&&data.weather[0].main
@@ -22,6 +22,10 @@ function App() {
     else if(climate=='Rain'){
       document.getElementById('app').style.backgroundImage=`url(${rain})`
     }
+    else if(climate==''){
+      // document.getElementById('app').style.backgroundImage=`url(${sun})`
+
+    }
   }clear()
 
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=f7faf169c296333a5e46c865f7987a27`
@@ -31,13 +35,14 @@ function App() {
    try{
     const res=await axios.get(url)
       setData(res.data)
-      setErr("No Error")
+      setError("No Error")
       console.log(res.data)
 
     }
     catch(err){
-    setErr("Not Available")
-    setData(null);
+    setError("Not Available")
+    setData(error);
+    setData('')
     console.log(err)
   }
   }
@@ -57,7 +62,7 @@ function App() {
       <div className='container'>
         <div className='top'>
           <div className='location'>
-            <p>{data.name}, {data.sys && data.sys.country}</p>
+            <p>{data.name} {data.sys && data.sys.country}</p>
           </div>
           <div className="temp">
             {data.main ? <h1>{data.main.temp}℉</h1> : null}
@@ -93,7 +98,7 @@ function App() {
             <p>Wind Speed</p>
           </div>
         </div>
-      </div>):(<p>{err}</p>)}
+      </div>):(<p id="all">{error}</p>)}
     </div>
   );
 }
