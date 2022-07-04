@@ -17,29 +17,17 @@ function City() {
   const [lat, setLat] = useState("");
   const [temperature, setTemperature] = useState("");
 
-  //   function clear() {
-  //     const climate = data.weather && data.weather[0].main;
-  //     if (climate == "Clear") {
-  //       document.getElementById("app").style.backgroundImage = `url(${clearsky})`;
-  //     } else if (climate == "Clouds") {
-  //       document.getElementById("app").style.backgroundImage = `url(${cloudy})`;
-  //     } else if (climate == "Rain") {
-  //       document.getElementById("app").style.backgroundImage = `url(${rain})`;
-  //     }
-  //   }
-  //   clear();
-
   function celsius(change) {
-    let celsius_value = parseFloat(change) - 273.15;
-    setTemperature( celsius_value);
+    let celsius_value = (parseFloat(change) - 273.15).toFixed(2);
+    setTemperature( celsius_value+"℃");
   }
   function fahren(change) {
-    let celsius_value = parseFloat(1.8* (parseFloat(change) - 273.15)+32);
-    setTemperature( celsius_value);
+    let celsius_value = (parseFloat(1.8* (parseFloat(change) - 273.15)+32)).toFixed(2);
+    setTemperature( celsius_value+"℉");
   }
   function kelvin(change) {
-    // let celsius_value = 1.8* (parseFloat(change) - 273.15)+32;
-    setTemperature( data.main &&data.main.temp);
+    let celsius_value = change
+    setTemperature(celsius_value +"K");
   }
 
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=f7faf169c296333a5e46c865f7987a27`;
@@ -50,7 +38,7 @@ function City() {
       try {
         const res = await axios.get(url);
         setData(res.data);
-        setTemperature(res.data.main.temp)
+        setTemperature(res.data.main.temp+"K")
         setError("No Error");
         console.log(res.data);
       } catch (err) {
@@ -98,7 +86,7 @@ function City() {
       style={{
         backgroundImage: `url(${
           climate === "Clear"
-            ? clearsky
+            ? clearsky 
             : climate === "Clouds"
             ? cloudy
             : climate === "Rain"
@@ -139,21 +127,25 @@ function City() {
             placeholder="Enter Longitude"
           />
         </div>
+        </div>
         <div className="box">
-          {/* <input type='radio' value='student'></input> */}
-          <p>Please Select Anyone</p>
+          <p className="decoration-red-900">Please Select Anyone</p>
           <input
             id="celcius"
             name="temp"
             type="radio"
             value="celcius"
-            onChange={FormatDecider}
+            onChange={FormatDecider}C
           />
           <label id="celcius" className="cel">
             Celsius
           </label>
-          <input id="fahren" name="temp" type="radio" value="fahren"
-           onChange={FormatDecider} />
+          <input
+           id="fahren"
+           name="temp" 
+           type="radio" 
+           value="fahren"
+           onChange={FormatDecider}F />
           <label id="fahren" className="fahren">
             Fahrenheit
           </label>
@@ -163,24 +155,23 @@ function City() {
             type="radio"
             value="kelvin"
             className="kelvin"
-            checked="true"
-            onChange={FormatDecider}
+            // checked="true"
+            onChange={FormatDecider}K
           />
           <label id="kelvin" className="">
             Kelvin
           </label>
         </div>
-      </div>
       {data ? (
         <div className="container">
           <div className="top">
             <div className="location">
-              <p>
+              <p className="citycolor">
                 {data.name} {data.sys && data.sys.country}
               </p>
             </div>
-            <div className="temp">
-              {data.main ? <h1 id="temp">{temperature}C </h1> : null}
+            <div className="temp" >            
+              {data.main ?  <h1 id="temp">{temperature}</h1> : null}
             </div>
             <div className="desc">
               {data.weather ? <p>{data.weather[0].description}</p> : null}
