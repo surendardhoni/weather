@@ -9,7 +9,23 @@ function Latitude(){
     const [data,setData] = useState({})
     const [lat,setLat] = useState('')
     const [lon,setLon] = useState('')
-  const [error,setError] = useState('')
+    const [error,setError] = useState('')
+    const [temperature, setTemperature] = useState("");
+
+
+    function celsius(change) {
+      let celsius_value = (parseFloat(change) - 273.15).toFixed(2);
+      setTemperature( celsius_value+"℃");
+    }
+    function fahren(change) {
+      let celsius_value = (parseFloat(1.8* (parseFloat(change) - 273.15)+32)).toFixed(2);
+      setTemperature( celsius_value+"℉");
+    }
+    function kelvin(change) {
+      let celsius_value = change
+      setTemperature(celsius_value +"K");
+    }
+
 
   function clear(){
     const climate=data.weather&&data.weather[0].main
@@ -29,6 +45,21 @@ function Latitude(){
 
 
 const link = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=7b2ede42a1e819baa9723850caf467f8`
+
+
+function FormatDecider(event){
+  if(event.target._wrapperState.initialValue=='celcius'){
+      celsius(data.main && data.main.temp);
+  }
+  if(event.target._wrapperState.initialValue=='fahren'){
+    fahren(data.main && data.main.temp);
+}
+if(event.target._wrapperState.initialValue=='kelvin'){
+  kelvin(data.main && data.main.temp);
+}
+  console.log(event.target._wrapperState.initialValue)     
+}
+
 
 const searchLocation =async (event) =>{
     if(event.key === 'Enter'){
@@ -65,6 +96,40 @@ return(
      onKeyPress={searchLocation}
      placeholder="Enter Longitude" />
   </div>
+  <div className="box">
+          <p className="decoration-red-900">Please Select Anyone</p>
+          <input
+            id="celcius"
+            name="temp"
+            type="radio"
+            value="celcius"
+            onChange={FormatDecider}C
+          />
+          <label id="celcius" className="cel">
+            Celsius
+          </label>
+          <input
+           id="fahren"
+           name="temp" 
+           type="radio" 
+           value="fahren"
+           onChange={FormatDecider}F />
+          <label id="fahren" className="fahren">
+            Fahrenheit
+          </label>
+          <input
+            id="kelvin"
+            name="temp"
+            type="radio"
+            value="kelvin"
+            className="kelvin"
+            checked={temperature.includes("K")}
+            onChange={FormatDecider}K
+          />
+          <label id="kelvin" className="">
+            Kelvin
+          </label>
+        </div>
 
 {data ? (
     <div className='container'>
@@ -73,7 +138,7 @@ return(
           <p>{data.name} {data.sys && data.sys.country}</p>
         </div>
         <div className="temp">
-          {data.main ? <h1>{data.main.temp}K</h1> : null}
+          {data.main ? <h1>{temperature}</h1> : null}
         </div>
         <div className="desc">
           {data.weather ? <p>{data.weather[0].description}</p> : null}

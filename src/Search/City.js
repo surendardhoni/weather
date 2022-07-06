@@ -4,41 +4,39 @@ import clearsky from "../assets/clearsky.jpg";
 import cloudy from "../assets/cloudy.jpg";
 import rain from "../assets/rainy.jpg";
 import sun from "../assets/sun.jpg";
-import mist from '../assets/mist.jpg'
-import thunder from '../assets/thunder.jpg'
-import Latitude from "./Latitude";
-
+import mist from "../assets/mist.jpg";
+import thunder from "../assets/thunder.jpg";
 
 function City() {
   const [data, setData] = useState({});
   const [location, setLocation] = useState("");
   const [error, setError] = useState("");
-  const [lon, setLon] = useState("");
-  const [lat, setLat] = useState("");
   const [temperature, setTemperature] = useState("");
+  const types = ["City", "Latitude"];
 
   function celsius(change) {
     let celsius_value = (parseFloat(change) - 273.15).toFixed(2);
-    setTemperature( celsius_value+"℃");
+    setTemperature(celsius_value + "℃");
   }
   function fahren(change) {
-    let celsius_value = (parseFloat(1.8* (parseFloat(change) - 273.15)+32)).toFixed(2);
-    setTemperature( celsius_value+"℉");
+    let celsius_value = parseFloat(
+      1.8 * (parseFloat(change) - 273.15) + 32
+    ).toFixed(2);
+    setTemperature(celsius_value + "℉");
   }
   function kelvin(change) {
-    let celsius_value = change
-    setTemperature(celsius_value +"K");
+    let celsius_value = change;
+    setTemperature(celsius_value + "K");
   }
 
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=f7faf169c296333a5e46c865f7987a27`;
-  const link = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=7b2ede42a1e819baa9723850caf467f8`;
 
   const searchLocation = async (event) => {
     if (event.key === "Enter") {
       try {
         const res = await axios.get(url);
         setData(res.data);
-        setTemperature(res.data.main.temp+"K")
+        setTemperature(res.data.main.temp + "K");
         setError("No Error");
         console.log(res.data);
       } catch (err) {
@@ -50,34 +48,20 @@ function City() {
     }
   };
 
-  function FormatDecider(event){
-    if(event.target._wrapperState.initialValue=='celcius'){
-        celsius(data.main && data.main.temp);
+  function FormatDecider(event) {
+    if (event.target._wrapperState.initialValue == "celcius") {
+      celsius(data.main && data.main.temp);
     }
-    if(event.target._wrapperState.initialValue=='fahren'){
+    if (event.target._wrapperState.initialValue == "fahren") {
       fahren(data.main && data.main.temp);
-  }
-  if(event.target._wrapperState.initialValue=='kelvin'){
-    kelvin(data.main && data.main.temp);
-}
-    console.log(event.target._wrapperState.initialValue)     
+    }
+    if (event.target._wrapperState.initialValue == "kelvin") {
+      kelvin(data.main && data.main.temp);
+    }
+    console.log(event.target._wrapperState.initialValue);
   }
 
-  const searchLatLan = async (event) => {
-    if (event.key === "Enter") {
-      try {
-        const responce = await axios.get(link);
-        setData(responce.data);
-        setError("No Error");
-        console.log(responce.data);
-      } catch (err) {
-        setError("City Not Found");
-        setData(error);
-        setData("");
-        console.log(err);
-      }
-    }
-  };
+
   let climate = data.weather && data.weather[0].main;
   return (
     <div
@@ -86,19 +70,20 @@ function City() {
       style={{
         backgroundImage: `url(${
           climate === "Clear"
-            ? clearsky 
+            ? clearsky
             : climate === "Clouds"
             ? cloudy
             : climate === "Rain"
-            ? rain 
-            : climate ==='Mist'
+            ? rain
+            : climate === "Mist"
             ? mist
-            : climate ==='Thunderstorm'
+            : climate === "Thunderstorm"
             ? thunder
             : sun
         })`,
       }}
     >
+ 
       <div className="search">
         <input
           value={location}
@@ -108,60 +93,46 @@ function City() {
           placeholder="Enter Location"
         />
       </div>
-      <div className="lati">
-        <div className="long">
-          <input
-            value={lat}
-            onChange={(event) => setLat(event.target.value)}
-            type="number"
-            onKeyPress={searchLatLan}
-            placeholder="Enter Latitude"
-          />
-        </div>
-        <div className="long">
-          <input
-            value={lon}
-            onChange={(event) => setLon(event.target.value)}
-            type="number"
-            onKeyPress={searchLatLan}
-            placeholder="Enter Longitude"
-          />
-        </div>
-        </div>
-        <div className="box">
-          <p className="decoration-red-900">Please Select Anyone</p>
-          <input
-            id="celcius"
-            name="temp"
-            type="radio"
-            value="celcius"
-            onChange={FormatDecider}C
-          />
-          <label id="celcius" className="cel">
-            Celsius
-          </label>
-          <input
-           id="fahren"
-           name="temp" 
-           type="radio" 
-           value="fahren"
-           onChange={FormatDecider}F />
-          <label id="fahren" className="fahren">
-            Fahrenheit
-          </label>
-          <input
-            id="kelvin"
-            name="temp"
-            type="radio"
-            value="kelvin"
-            className="kelvin"
-            // checked="true"
-            onChange={FormatDecider}K
-          />
-          <label id="kelvin" className="">
-            Kelvin
-          </label>
-        </div>
+   
+       
+      <div className="box">
+        <p className="decoration-red-900">Please Select Anyone</p>
+        <input
+          id="celcius"
+          name="temp"
+          type="radio"
+          value="celcius"
+          onChange={FormatDecider}
+          C
+        />
+        <label id="celcius" className="cel">
+          Celsius
+        </label>
+        <input
+          id="fahren"
+          name="temp"
+          type="radio"
+          value="fahren"
+          onChange={FormatDecider}
+          F
+        />
+        <label id="fahren" className="fahren">
+          Fahrenheit
+        </label>
+        <input
+          id="kelvin"
+          name="temp"
+          type="radio"
+          value="kelvin"
+          className="kelvin"
+          checked={temperature.includes("K")}
+          onChange={FormatDecider}
+          K
+        />
+        <label id="kelvin" className="">
+          Kelvin
+        </label>
+      </div>
       {data ? (
         <div className="container">
           <div className="top">
@@ -170,8 +141,8 @@ function City() {
                 {data.name} {data.sys && data.sys.country}
               </p>
             </div>
-            <div className="temp" >            
-              {data.main ?  <h1 id="temp">{temperature}</h1> : null}
+            <div className="temp">
+              {data.main ? <h1 id="temp">{temperature}</h1> : null}
             </div>
             <div className="desc">
               {data.weather ? <p>{data.weather[0].description}</p> : null}
